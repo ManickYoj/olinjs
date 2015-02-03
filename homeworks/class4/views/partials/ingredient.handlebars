@@ -1,0 +1,15 @@
+{{#each ingredient}}
+	<tr>
+		<td class='col-xs-1'><button class="btn btn-alert" type="button" data-toggle="collapse" data-target="#edit{{name}}"><span class="glyphicon glyphicon-pencil"></span></button></td>
+		<td>{{quantity}}</td>
+		<td>{{price}}</td>
+		<td>{{name}}</td>
+		<td><button class="btn btn-alert">Mark Out of Stock</button></td>
+		<td><button class="btn btn-danger">Delete</button></td>
+	</tr>
+	<tr class="collapse" id="edit{{name}}">
+		<td>{{quantity}}</td>
+		<td>{{price}}</td>
+		<td>{{name}}</td>
+	</tr>
+{{/each}}

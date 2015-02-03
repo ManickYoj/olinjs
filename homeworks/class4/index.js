@@ -11,7 +11,7 @@ var hbs = require('express-handlebars');
 var home = require('./routes/home');
 var customer = require('./routes/customer');
 var kitchen = require('./routes/kitchen');
-var ingredients = require('./routes/ingredients');
+var management = require('./routes/management');
 
 // Config
 var app = express();
@@ -39,6 +39,8 @@ app.get('/', home);
 app.get('/order', customer);
 app.get('/kitchen', kitchen);
 app.get('/ingredients', management);
+app.post('/ingredients', management.add);
+
 
 // Listen
 app.listen(PORT);

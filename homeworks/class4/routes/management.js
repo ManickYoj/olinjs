@@ -3,7 +3,8 @@ var Ingredient = require('../model/ingredients');
 // page request handler
 module.exports = function (req, res) {
 	var pageData = {
-		page_title: 'Manage'
+		page_title: 'Manage',
+		incl_js: ['management-fe']
 	};
 
 	Ingredient.find()
@@ -21,21 +22,20 @@ module.exports = function (req, res) {
 };
 
 // post request handlers
-model.exports.add = function (req, res) {
+module.exports.add = function (req, res) {
+	console.log("Hit add function");
 	var rq = req.query;
-	var ingredient = new Ingredient({name: rq.name, price: rq.price, quantity: rq.quantity});
-	ingredient.save(function (err) {
+	Ingredient.create({name: rq.name, price: rq.price, quantity: rq.quantity}, function (err, ingredient) {
 		// Failure
-		if (err) {
-			res.send('false');
-			return console.error("Failed to save new ingredient: " + ingredient, err);
-		}
+		if (err) return console.error("Failed to save new ingredient: " + ingredient, err);
+
 		// Success
-		res.send('true');
+		console.log(ingredient);
+		res.render('partials/ingredient', {ingredient: [ingredient]});
 	});
 };
 
-model.exports.remove = function (req, res) {
+module.exports.remove = function (req, res) {
 	Ingredient.findOneAndRemove({name: req.query.name}, {}, function (err, ingredient) {
 		// Failure
 		if (err) {
