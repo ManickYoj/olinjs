@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var schema =  mongoose.Schema({
-	name: { type: String, unique: true },
+	name: { type: String, unique: true, validate: /[A-Z].*/ },
 	price: { type: Number, default: 1.00, min: 0 },
 	quantity: { type: Number, default: 100, min: 0 }
 });

@@ -1,15 +1,18 @@
-{{#each ingredient}}
-	<tr>
-		<td class='col-xs-1'><button class="btn btn-alert" type="button" data-toggle="collapse" data-target="#edit{{name}}"><span class="glyphicon glyphicon-pencil"></span></button></td>
-		<td>{{quantity}}</td>
-		<td>{{price}}</td>
-		<td>{{name}}</td>
-		<td><button class="btn btn-alert">Mark Out of Stock</button></td>
-		<td><button class="btn btn-danger">Delete</button></td>
-	</tr>
-	<tr class="collapse" id="edit{{name}}">
-		<td>{{quantity}}</td>
-		<td>{{price}}</td>
-		<td>{{name}}</td>
-	</tr>
+{{#each ingredients	}}
+	
+	<div class="row">
+		<form method="POST">
+			<div class='col-md-2'><button class="btn btn-alert" type="button" data-toggle="collapse" data-target="#edit{{name}}"><span class="glyphicon glyphicon-pencil"></span></button></div>
+			<div class='col-md-2'>{{quantity}}</div>
+			<div class='col-md-2'>{{currency price}}</div>
+			<div class='col-md-3'>{{name}}</div>
+			<div class='col-md-2'><button value="update" class="btn btn-alert">Mark Out of Stock</button></div>
+			<div class='col-md-1'><button value="delete" class="delete-ingredient btn btn-danger">Delete</button></div>
+		</form>
+	</div>
+	<div class="collapse row" id="edit{{name}}">
+		<div class='col-md-2 col-md-offset-2'>{{quantity}}</div>
+		<div class='col-md-4'>{{currency price}}</div>
+		<div class='col-md-6'>{{name}}</div>
+	</div>
 {{/each}}

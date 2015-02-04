@@ -1,16 +1,21 @@
-var $add = $("#add-new");
+var $add = $("#add-form");
 
 var onSuccess = function(data, status) {
-	console.log('response: ' + data);
-	$( data ).prependTo( 'tbody' );
+	$( data ).prependTo('#ingredient-rows');
+	$('.alert').remove();
 };
 
 var onError = function(data, status) {
-	console.log("An error has occurred, status code " + status);
+	if ($('.alert').length) return;
+	var alert = "" +
+	"<div class='alert alert-danger alert-dismissible' role='alert>\
+  	<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>\
+  	<strong>Add Failed.</strong> New ingredients names must start with at least one uppercase character and have a positive price and quanitity.\
+	</div>";
+	$(alert).prependTo('#header-row');
 };
 
 $add.submit(function (event) {
-	console.log('pressed');
 	event.preventDefault();
 	var qty = $add.find("[name='qty']").val();
 	var price = $add.find("[name='price']").val();
@@ -20,5 +25,5 @@ $add.submit(function (event) {
 		qty: qty,
 		price: price,
 		name: name
-	}).done(onSuccess).error(onError)
+	}).done(onSuccess).error(onError);
 });

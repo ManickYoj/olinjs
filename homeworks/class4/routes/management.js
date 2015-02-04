@@ -11,10 +11,8 @@ module.exports = function (req, res) {
 		.sort('name')
 		.exec(function(err, ingredients) {
 			// Failure
-			if (err) {
-				res.sendStatus('500');
-				return console.error("Failed to find full ingredient list: " + ingredients, err);
-			}
+			if (err) return res.sendStatus('500');
+
 			// Success
 			pageData.ingredients = ingredients;
 			res.render('management', pageData);
@@ -23,15 +21,12 @@ module.exports = function (req, res) {
 
 // post request handlers
 module.exports.add = function (req, res) {
-	console.log("Hit add function");
-	var rq = req.query;
-	Ingredient.create({name: rq.name, price: rq.price, quantity: rq.quantity}, function (err, ingredient) {
+	Ingredient.create(req.body, function (err, ingredient) {
 		// Failure
-		if (err) return console.error("Failed to save new ingredient: " + ingredient, err);
+		if (err) return res.sendStatus('500');
 
-		// Success
-		console.log(ingredient);
-		res.render('partials/ingredient', {ingredient: [ingredient]});
+		// Success	
+		res.render('partials/ingredient', {layout: false, ingredients: [ingredient]});
 	});
 };
 

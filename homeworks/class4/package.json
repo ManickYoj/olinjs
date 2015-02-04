@@ -1,5 +1,5 @@
 {
-  "name": "Burger Joint",
+  "name": "burger_joint",
   "version": "1.0.0",
   "description": "A web-app simulating a (very) basic burger-joint online ordering and management application. An assignment for homework 4 of the olin.js class.",
   "main": "index.js",

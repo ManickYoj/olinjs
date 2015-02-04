@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var hbs = require('express-handlebars');
+var numeral = require('numeral');
 
 // Route Imports
 var home = require('./routes/home');
@@ -22,7 +23,10 @@ app.engine('handlebars', hbs(
 	{
 		defaultLayout: 'base',
 		partialsDir: __dirname + '/views/partials',
-  		layoutsDir: __dirname + '/views/layouts'
+  		layoutsDir: __dirname + '/views/layouts',
+  		helpers: {
+        	currency: function(number) { return numeral(number).format('$0,0.00'); }
+    	}
 	}));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
@@ -39,8 +43,7 @@ app.get('/', home);
 app.get('/order', customer);
 app.get('/kitchen', kitchen);
 app.get('/ingredients', management);
-app.post('/ingredients', management.add);
-
+app.post('/ingredients/', management.add);
 
 // Listen
 app.listen(PORT);
