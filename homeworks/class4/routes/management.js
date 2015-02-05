@@ -19,53 +19,58 @@ module.exports = function (req, res) {
 	});	
 };
 
+module.exports.post = function(req, res) {
+	if (req.body.action === 'add') return create (req, res);
+	else if (req.body.action === 'delete') return remove (req, res);
+	else if (req.body.action === 'oos') return outOfStock (req, res);
+	else if (req.body.action === 'edit') return edit (req, res);
+};
+
 // post request handlers
-module.exports.add = function (req, res) {
-	Ingredient.create(req.body, function (err, ingredient) {
+function create (req, res) {
+	var rq = req.body;
+	Ingredient.create({name: rq.name, quantity: rq.qty, price: rq.price}, function (err, ingredient) {
 		// Failure
 		if (err) return res.sendStatus('500');
 
 		// Success	
 		res.render('partials/ingredient', {layout: false, ingredients: [ingredient]});
 	});
-};
+}
 
-module.exports.remove = function (req, res) {
-	Ingredient.findOneAndRemove({name: req.query.name}, {}, function (err, ingredient) {
-		// Failure
-		if (err) {
-			res.send('false');
-			return console.error("Failed to find and remove ingredient by name: " + ingredient, err);
-		}
-		// Success
-		res.send('true');
+function remove (req, res) {
+	
+	Ingredient.find().exec(function(err, ingredient){
+		console.log(ingredient);
 	});
-};
+	console.log(req.body.name);
+	Ingredient.findOneAndRemove({name: req.body.name}, {}, function (err, ingredient) {
+		if (err || ingredient.name === null) return res.sendStatus('500'); 	// Failure
+		console.log(ingredient.name);
+		return res.sendStatus('200');			// Success
+	});
+}
 
-module.exports.outOfStock = function (req, res) {
+function outOfStock (req, res) {
 	Ingredient.find({name: req.query.name}, function (err, ingredient) {
 		// Failure
-		if (err) {
-			res.send('false');
-			return console.error("Failed to find ingredient by name: " + ingredient, err);
-		}
+		if (err) return res.sendStatus('500');
+
 		// Success
 		ingredient.quantity = 0;
 		res.send('true');
 	});
-};
+}
 
-module.exports.edit = function (req, res) {
+function edit (req, res) {
 	Ingredient.find({name: req.query.name}, function (err, ingredient) {
 		// Failure
-		if (err) {
-			res.send('false');
-			return console.error("Failed to find ingredient by name: " + ingredient, err);
-		}
+		if (err) return res.sendStatus('500');
+
 		// Success
 		ingredient.name = req.query.newName;
 		ingredient.price = req.query.newPrice;
 		ingredient.quantity = req.query.quantity;
 		res.send('true');
 	});
-};
+}

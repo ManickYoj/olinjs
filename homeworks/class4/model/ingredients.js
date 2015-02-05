@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
 
 var schema =  mongoose.Schema({
-	name: { type: String, unique: true, validate: /[A-Z].*/ },
-	price: { type: Number, default: 1.00, min: 0 },
-	quantity: { type: Number, default: 100, min: 0 }
+	name: { type: String, unique: true, match: /^([A-Z][a-z]*[ ]?)+$/ },
+	price: { type: Number,  min: 0 },
+	quantity: { type: Number, min: 0 }
 });
 
 module.exports = mongoose.model('Ingredient', schema);

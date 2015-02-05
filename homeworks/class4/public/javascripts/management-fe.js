@@ -1,4 +1,8 @@
-var $add = $("#add-form");
+ 
+// Put the name of the clicked button into the hidden action element
+var $action = $("#action");
+$(":submit").click(function () { $action.val(this.value); });
+
 
 var onSuccess = function(data, status) {
 	$( data ).prependTo('#ingredient-rows');
@@ -15,15 +19,28 @@ var onError = function(data, status) {
 	$(alert).prependTo('#header-row');
 };
 
-$add.submit(function (event) {
+$("#add-form").submit(function (event) {
 	event.preventDefault();
-	var qty = $add.find("[name='qty']").val();
-	var price = $add.find("[name='price']").val();
-	var name = $add.find("[name='name']").val();
+	var $form = $(this);
 
 	$.post("ingredients", {
-		qty: qty,
-		price: price,
-		name: name
+		action: $action.val(),
+		qty: $form.find("[name='qty']").val(),
+		price: $form.find("[name='price']").val(),
+		name: $form.find("[name='name']").val()
 	}).done(onSuccess).error(onError);
 });
+
+$(".ingredient-row").submit(function(event) {
+	event.preventDefault();
+	var $form = $(this);
+
+	$.post('ingredients', {
+		action: $action.val(),
+		name: $form.find(".name").html()
+	}).done( function (data, status) {
+		$form.remove();
+	}).error (function (data, status) {
+		console.log("Remove failed.")
+	})
+})

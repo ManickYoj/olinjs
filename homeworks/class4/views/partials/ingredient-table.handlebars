@@ -25,12 +25,13 @@
 			</div>
 
 			<div class="col-md-2">
-				<input class="btn btn-success" form='add-form' type='submit' value="Add New">
+				<button class="btn btn-success" form='add-form' type='submit' value="add">Add New</button>
 			</div>	
 		</div>
 	</form>
 
 <!-- INGREDIENT ROWS -->
+<input type="hidden" name="action" id="action" />
 <div id="ingredient-rows">
 	{{> ingredient}}
 </div>

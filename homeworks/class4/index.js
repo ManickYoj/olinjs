@@ -19,6 +19,7 @@ var app = express();
 var mongoURI = process.env.MONGOURI || "mongodb://localhost/test";
 var PORT = process.env.PORT || 3000;
 mongoose.connect(mongoURI);
+mongoose.connection.db.dropCollection(mongoURI);
 app.engine('handlebars', hbs(
 	{
 		defaultLayout: 'base',
@@ -43,7 +44,7 @@ app.get('/', home);
 app.get('/order', customer);
 app.get('/kitchen', kitchen);
 app.get('/ingredients', management);
-app.post('/ingredients/', management.add);
+app.post('/ingredients', management.post);
 
 // Listen
 app.listen(PORT);
