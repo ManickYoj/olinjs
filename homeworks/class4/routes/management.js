@@ -19,46 +19,48 @@ module.exports = function (req, res) {
 	});	
 };
 
-module.exports.post = function(req, res) {
-	if (req.body.action === 'add') return create (req, res);
-	else if (req.body.action === 'delete') return remove (req, res);
-	else if (req.body.action === 'oos') return outOfStock (req, res);
-	else if (req.body.action === 'edit') return edit (req, res);
+module.exports.route = function(req, res) {
+	switch(req.params.function) {
+		case 'add': return create (req, res);
+		case 'delete': return remove (req, res);
+		case 'edit': return edit (req, res);
+		case 'outOfStock': return outOfStock (req, res);
+	}
 };
 
 // post request handlers
 function create (req, res) {
 	var rq = req.body;
+	var failure_json = { 
+		layout: false,
+		alert: {
+			summary: 'Add Failed.',
+			description: 'Ingredient name must be composed of words with the first letter of each capitalized. ' +
+						 'No special characters or numbers are allowed.'
+		}
+	};
+
+	if (!rq.name|| !rq.qty || !rq.price) return res.status(500).render('partials/alert', failure_json);
 	Ingredient.create({name: rq.name, quantity: rq.qty, price: rq.price}, function (err, ingredient) {
 		// Failure
-		if (err) return res.sendStatus('500');
+		if (err) return res.status(500).render('partials/alert', failure_json);
 
 		// Success	
-		res.render('partials/ingredient', {layout: false, ingredients: [ingredient]});
+		res.render('partials/ingredients', {layout: false, ingredients: [ingredient]});
 	});
 }
 
 function remove (req, res) {
-	
-	Ingredient.find().exec(function(err, ingredient){
-		console.log(ingredient);
-	});
-	console.log(req.body.name);
-	Ingredient.findOneAndRemove({name: req.body.name}, {}, function (err, ingredient) {
-		if (err || ingredient.name === null) return res.sendStatus('500'); 	// Failure
-		console.log(ingredient.name);
+	Ingredient.findOneAndRemove({name: req.body.name}, {}, function (err) {
+		if (err) return res.sendStatus('500'); 	// Failure
 		return res.sendStatus('200');			// Success
 	});
 }
 
 function outOfStock (req, res) {
-	Ingredient.find({name: req.query.name}, function (err, ingredient) {
-		// Failure
-		if (err) return res.sendStatus('500');
-
-		// Success
-		ingredient.quantity = 0;
-		res.send('true');
+	Ingredient.update({name: req.body.name}, { $set: { quantity: 0 }}, function (err) {
+		if (err) return res.sendStatus('500');  // Failure
+		res.sendStatus(200);  // Success
 	});
 }
 

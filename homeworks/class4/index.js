@@ -44,7 +44,7 @@ app.get('/', home);
 app.get('/order', customer);
 app.get('/kitchen', kitchen);
 app.get('/ingredients', management);
-app.post('/ingredients', management.post);
+app.post('/ingredients/:function', management.route);
 
 // Listen
 app.listen(PORT);
