@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var schema =  mongoose.Schema({
-	ingredients: [mongoose.Schema.ObjectId]
+	ingredients: [{type: mongoose.Schema.ObjectId, ref: 'Ingredient'}]
 });
 
-module.exports = mongoose.model('Ingredient', schema);
+module.exports = mongoose.model('Burger', schema);

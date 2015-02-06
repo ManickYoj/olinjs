@@ -7,10 +7,10 @@
 .full-width { width: 100% !important; }
 
 .bottom-border {
-	padding-bottom: 5px;
+	padding-bottom: 10px !important;
 	border-bottom: 2px solid #333;
 }
 
 .row {
-	padding: 3px 0;
+	margin-top: 10px;
 }

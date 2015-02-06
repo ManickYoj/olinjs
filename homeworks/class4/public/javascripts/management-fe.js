@@ -44,3 +44,35 @@ $("#add-form").submit(function (event) {
 		$('#alert-box').html(data.responseText);
 	});
 });
+
+$('.ingredient-edit-row').submit( function (event) {
+	event.preventDefault();
+	var $form = $(this);
+	var $dispParent = $form.siblings('.row');
+
+	$.post("ingredients/edit", {
+		previous_name: $dispParent.find(".name").html(),
+		qty: $form.find("[name='qty']").val(),
+		price: $form.find("[name='price']").val(),
+		name: $form.find("[name='name']").val()
+
+	}).done(function (data, status) {
+		// Update display values
+		$dispParent.find('.quantity').html(data.quantity);
+		$dispParent.find('.price').html('$' + data.price);
+		$dispParent.find('.name').html(data.name);
+		$dispParent.find('.oos-button').prop("disabled", (data.quantity<=0));
+
+		// Hide edit form and modify it's values
+		$form.find('.collapse').collapse('hide');
+		$form.find('.quantity').val(data.quantity);
+		$form.find('.price').val(data.price);
+		$form.find('.name').val(data.name);
+
+		$('.alert').remove();
+
+	}).error( function (data, status) {
+		// Post alert on failure
+		$('#alert-box').html(data.responseText);
+	});
+});

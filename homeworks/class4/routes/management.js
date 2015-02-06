@@ -1,4 +1,5 @@
 var Ingredient = require('../model/ingredients');
+var numeral = require('numeral');
 
 // page request handler
 module.exports = function (req, res) {
@@ -31,11 +32,12 @@ module.exports.route = function(req, res) {
 // post request handlers
 function create (req, res) {
 	var rq = req.body;
-	var failure_json = { 
+	var failure_json = {
 		layout: false,
 		alert: {
+			type: 'danger',
 			summary: 'Add Failed.',
-			description: 'Ingredient name must be composed of words with the first letter of each capitalized. ' +
+			description: 'Ingredient name must be unique and composed of words with the first letter of each capitalized. ' +
 						 'No special characters or numbers are allowed.'
 		}
 	};
@@ -65,14 +67,24 @@ function outOfStock (req, res) {
 }
 
 function edit (req, res) {
-	Ingredient.find({name: req.query.name}, function (err, ingredient) {
+	var rq = req.body;
+	var update = {quantity: rq.qty, name: rq.name, price: rq.price};
+	Ingredient.findOneAndUpdate({name: rq.previous_name}, update, function (err, ingredient) {
 		// Failure
-		if (err) return res.sendStatus('500');
+		if (err)
+			return res.status(500).render('partials/alert', { 
+				layout: false,
+				alert: {
+					type: 'danger',
+					summary: 'Update Failed.',
+					description: 'Ingredient name must be unique and composed of words with the first letter of each capitalized. ' +
+								 'No special characters or numbers are allowed. Quantity and price must be positive.'
+				}
+			});
 
 		// Success
-		ingredient.name = req.query.newName;
-		ingredient.price = req.query.newPrice;
-		ingredient.quantity = req.query.quantity;
-		res.send('true');
+		ingredient = ingredient.toJSON();
+		ingredient.price =  numeral(ingredient.price).format('0,0.00');
+		res.json(ingredient);
 	});
 }

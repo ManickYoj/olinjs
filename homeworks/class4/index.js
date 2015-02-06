@@ -26,7 +26,8 @@ app.engine('handlebars', hbs(
 		partialsDir: __dirname + '/views/partials',
   		layoutsDir: __dirname + '/views/layouts',
   		helpers: {
-        	currency: function(number) { return numeral(number).format('$0,0.00'); }
+        	currency: function(number) { return numeral(number).format('$0,0.00'); },
+        	cents: function(number) { return numeral(number).format('0,0.00'); }
     	}
 	}));
 app.set('views', __dirname + '/views');
@@ -42,6 +43,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Routing Table
 app.get('/', home);
 app.get('/order', customer);
+app.post('/order', customer.order);
 app.get('/kitchen', kitchen);
 app.get('/ingredients', management);
 app.post('/ingredients/:function', management.route);
