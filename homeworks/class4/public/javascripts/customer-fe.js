@@ -1,5 +1,10 @@
 var ingredients = [];
+var customerName;
+
 var $total = $('#total');
+
+function postAlert (data) { console.log(data); $('div#alert-box').html(data); }
+function postAlertResponse (data) { console.log(data); $('div#alert-box').html(data.responseText); }
 
 $('.checkbox').click( function () {
 	var $checkbox = $(this);
@@ -14,12 +19,21 @@ $('.checkbox').click( function () {
 	}
 });
 
+// Disable the submit button if no name is entered
+$('#customer-name').focus( function(event) {
+	$("#submit-button").prop('disabled', false);
+});
+
 $('form').submit( function(event) {
 	event.preventDefault();
+	var customerName = $('#customer-name').val();
+	if (!customerName) return;
 	console.log(ingredients);
+
 	$.post('order', {
-		ingredients: ingredients
-	}).done( function (data, status) {
-		$('div#alert-box').html(data);
-	});
+		customerName: customerName,
+		ingredients: JSON.stringify(ingredients)
+	})
+	.done(postAlert)
+	.error(postAlertResponse);
 });
